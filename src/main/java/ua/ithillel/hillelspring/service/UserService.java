@@ -9,11 +9,38 @@ import java.util.List;
 
 @Service
 public class UserService {
+    private final UserController userController;
 
     @Autowired
-    private UserController userController;
+    public UserService(UserController userController) {
+        this.userController = userController;
+    }
 
-    public List<User> getAll(){
+    public List<User> getAll() {
         return userController.getAll();
+    }
+
+    public User getById(Integer id) {
+        return userController.getById(id);
+    }
+
+    public User getByEmailAndPhone(String email, Integer phone) {
+        return  userController.getByEmailAndPhone(email, phone);
+    }
+
+    public User getByFilter(String name, String surname, Integer age) {
+        return userController.getByFilter(name, surname, age);
+    }
+
+    public User save(User user) {
+        return userController.save(user);
+    }
+
+    public User update(Integer id, User user) {
+        return userController.update(id, user);
+    }
+
+    public Integer delete(Integer id) {
+        return userController.delete(id);
     }
 }

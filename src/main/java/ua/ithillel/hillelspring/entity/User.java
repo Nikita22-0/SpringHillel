@@ -10,8 +10,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class User {
+
+    private int id;
     private String name;
     private String surname;
     private int age;
     private String email;
+    private int phone;
 }
