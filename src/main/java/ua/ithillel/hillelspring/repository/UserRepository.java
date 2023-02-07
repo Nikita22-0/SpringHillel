@@ -10,7 +10,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query("update User u set u.name = ?1, u.surname = ?2 where u.age = ?3")
-    Integer updateNameAndSurname(String name, String  surname, Integer age);
+    Integer updateNameAndSurname(String name, String surname, Integer age);
 
     User getUsersByNameOrSurnameOrAge(String name, String surname, Integer age);
 
