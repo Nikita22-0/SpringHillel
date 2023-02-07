@@ -1,80 +1,77 @@
 package ua.ithillel.hillelspring.controller;
 
-import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.ithillel.hillelspring.entity.User;
+import ua.ithillel.hillelspring.controller.Dto.IntegerDto;
+import ua.ithillel.hillelspring.controller.Dto.UserDto;
+import ua.ithillel.hillelspring.controller.mapper.UserMapper;
+import ua.ithillel.hillelspring.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final List<User> users = new ArrayList<>();
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    @PostConstruct
-    public void addUser() {
-        users.add(new User(0, "Bob", "Jackson", 32, "bob@gmail.com", 504561238));
-        users.add(new User(1, "John", "Smith", 20, "john@gmail.com", 631264598));
+    @Autowired
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return users;
+    public ResponseEntity<List<UserDto>> getAll() {
+        return new ResponseEntity<>(userMapper.toListDto(userService.getAll()).getStatusCode());
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable Integer id) {
-        return users.get(id);
+    public ResponseEntity<UserDto> getById(@PathVariable Integer id) {
+        return ResponseEntity.ok(userMapper.toDto(userService.getById(id)));
     }
 
     @GetMapping("/{email}/{phone}")
-    public User getByEmailAndPhone(@PathVariable String email,
-                                   @PathVariable Integer phone) {
-        for (User user : users) {
-            if (email.equals(user.getEmail()) && phone.equals(user.getPhone())) {
-                return user;
-            }
-        }
-        return null;
+    public ResponseEntity<UserDto> getByEmailAndPhone(@PathVariable String email,
+                                                      @PathVariable Integer phone) {
+        return ResponseEntity.ok(userMapper.toDto(userService.getByEmailAndPhone(email, phone)));
     }
 
     @GetMapping("/filter")
-    public User getByFilter(@RequestParam(required = false) String name,
-                            @RequestParam String surname,
-                            @RequestParam(required = false) Integer age) {
-        for (User user : users) {
-            if (surname.equals(user.getSurname()) || name.equals(user.getName()) || age.equals(user.getAge())) {
-                return user;
-            }
-        }
-        return null;
+    public ResponseEntity<UserDto> getByFilter(@RequestParam(required = false) String name,
+                                               @RequestParam String surname,
+                                               @RequestParam(required = false) Integer age) {
+        return ResponseEntity.ok(userMapper.toDto(userService.getByFilter(name, surname, age)));
     }
 
     @PostMapping
-    public User save(@RequestBody User user) {
-        users.add(user);
-        user.setId(users.size() - 1);
-        return user;
+    public ResponseEntity<UserDto> save(@RequestBody UserDto userDto) {
+        return new ResponseEntity<>(
+                userMapper.toDto(
+                        userService.save(
+                                userMapper.toEntity(userDto))),
+                HttpStatus.CREATED
+        );
     }
 
-    @PutMapping("/{id}")
-    public User update(@PathVariable Integer id,
-                       @RequestBody User user) {
-        User oldUser = users.get(id);
-        oldUser.setId(id);
-        oldUser.setName(user.getName());
-        oldUser.setSurname(user.getSurname());
-        oldUser.setAge(user.getAge());
-        oldUser.setEmail(user.getEmail());
-        oldUser.setPhone(user.getPhone());
-        return users.get(id);
+    @PutMapping
+    public UserDto update(@RequestBody UserDto userDto) {
+        return userMapper.toDto(
+                userService.update(userMapper.toEntity(userDto)));
+    }
+
+    @PutMapping("/update/{name}/{surname}/{age}")
+    public IntegerDto updateNameAndSurname(@PathVariable String name,
+                                           @PathVariable String surname,
+                                           @PathVariable Integer age) {
+        return new IntegerDto(userService.updateNameAndSurname(name, surname, age));
     }
 
     @DeleteMapping
-    public Integer delete(@RequestParam int id) {
-        users.remove(id);
-        return id;
+    public Integer delete(@RequestParam Integer id) {
+        return userService.delete(id);
     }
 }
 

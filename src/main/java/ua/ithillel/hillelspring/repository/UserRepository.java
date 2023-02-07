@@ -1,47 +1,18 @@
 package ua.ithillel.hillelspring.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import ua.ithillel.hillelspring.entity.User;
-import ua.ithillel.hillelspring.service.UserService;
 
-import java.util.List;
+public interface UserRepository extends JpaRepository<User, Integer> {
+    @Transactional
+    @Modifying
+    @Query("update User u set u.name = ?1, u.surname = ?2 where u.age = ?3")
+    Integer updateNameAndSurname(String name, String  surname, Integer age);
 
-@Repository
-public class UserRepository {
+    User getUsersByNameOrSurnameOrAge(String name, String surname, Integer age);
 
-    private final UserService userService;
-
-    @Autowired
-    public UserRepository(UserService userService) {
-        this.userService = userService;
-    }
-
-    public List<User> getAll() {
-        return userService.getAll();
-    }
-
-    public User getById(Integer id) {
-        return userService.getById(id);
-    }
-
-    public User getByEmailAndPhone(String email, Integer phone) {
-        return userService.getByEmailAndPhone(email, phone);
-    }
-
-    public User getByFilter(String name, String surname, Integer age) {
-        return userService.getByFilter(name, surname, age);
-    }
-
-    public User save(User user) {
-        return userService.save(user);
-    }
-
-    public User update(Integer id, User user) {
-        return userService.update(id, user);
-    }
-
-    public Integer delete(Integer id) {
-        return userService.delete(id);
-    }
+    User getUsersByEmailAndPhone(String email, Integer Phone);
 }

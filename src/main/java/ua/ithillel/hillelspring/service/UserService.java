@@ -2,45 +2,50 @@ package ua.ithillel.hillelspring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.ithillel.hillelspring.controller.UserController;
 import ua.ithillel.hillelspring.entity.User;
+import ua.ithillel.hillelspring.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 public class UserService {
-    private final UserController userController;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserController userController) {
-        this.userController = userController;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public List<User> getAll() {
-        return userController.getAll();
+        return userRepository.findAll();
     }
 
     public User getById(Integer id) {
-        return userController.getById(id);
+        return userRepository.findById(id).orElseThrow();
     }
 
     public User getByEmailAndPhone(String email, Integer phone) {
-        return  userController.getByEmailAndPhone(email, phone);
+        return userRepository.getUsersByEmailAndPhone(email, phone);
     }
 
     public User getByFilter(String name, String surname, Integer age) {
-        return userController.getByFilter(name, surname, age);
+        return userRepository.getUsersByNameOrSurnameOrAge(name, surname, age);
     }
 
     public User save(User user) {
-        return userController.save(user);
+        return userRepository.save(user);
     }
 
-    public User update(Integer id, User user) {
-        return userController.update(id, user);
+    public User update(User user) {
+        return userRepository.save(user);
+    }
+
+    public Integer updateNameAndSurname(String name, String surname, Integer age) {
+        return userRepository.updateNameAndSurname(name, surname, age);
     }
 
     public Integer delete(Integer id) {
-        return userController.delete(id);
+        userRepository.deleteById(id);
+        return id;
     }
 }
