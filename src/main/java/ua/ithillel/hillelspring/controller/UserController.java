@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.ithillel.hillelspring.controller.Dto.IntegerDto;
-import ua.ithillel.hillelspring.controller.Dto.UserDto;
+import ua.ithillel.hillelspring.controller.dto.IntegerDto;
+import ua.ithillel.hillelspring.controller.dto.UserDto;
 import ua.ithillel.hillelspring.controller.mapper.UserMapper;
 import ua.ithillel.hillelspring.service.UserService;
 
@@ -25,7 +25,10 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll() {
-        return new ResponseEntity<>(userMapper.toListDto(userService.getAll()).getStatusCode());
+        return new ResponseEntity<>(userMapper.toListDto(
+                userService.getAll()),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/{id}")

@@ -1,4 +1,4 @@
-package ua.ithillel.hillelspring.controller.Dto;
+package ua.ithillel.hillelspring.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

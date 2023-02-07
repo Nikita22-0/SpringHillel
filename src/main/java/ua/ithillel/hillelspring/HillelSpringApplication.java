@@ -14,18 +14,17 @@ import java.util.List;
 public class HillelSpringApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(HillelSpringApplication.class, args);
-//        ConfigurableApplicationContext springRun = SpringApplication.run(HillelSpringApplication.class, args);
-//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
-//        String stringBean = context.getBean("stringBean", String.class);
-//        User getUser = context.getBean("getUser", User.class);
-//        String getServerName = context.getBean("getServerName", String.class);
-//        Integer getHostServer = context.getBean("getHostServer", Integer.class);
-//        System.out.println(stringBean);
-//        System.out.println(getUser);
-//        System.out.println(getServerName);
-//        System.out.println(getHostServer);
-//        UserComponent userComponent = springRun.getBean(UserComponent.class);
+        ConfigurableApplicationContext springRun = SpringApplication.run(HillelSpringApplication.class, args);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        String stringBean = context.getBean("stringBean", String.class);
+        User getUser = context.getBean("getUser", User.class);
+        String getServerName = context.getBean("getServerName", String.class);
+        Integer getHostServer = context.getBean("getHostServer", Integer.class);
+        System.out.println(stringBean);
+        System.out.println(getUser);
+        System.out.println(getServerName);
+        System.out.println(getHostServer);
+        UserComponent userComponent = springRun.getBean(UserComponent.class);
 //        List<User> all = userComponent.getAll();
 //        all.forEach(System.out::println);
     }
